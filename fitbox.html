@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitBox - Premium Fitness Hub</title>
+  <meta name="description" content="Your complete ecosystem for health management. Track workouts, diets, and personal goals.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+:root {
+  --bg-main: #0b0f19;
+  --bg-card: #151a28;
+  --bg-card-hover: #1e2436;
+  --bg-sidebar: #0f1322;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-danger: #ef4444;
+  --border-color: rgba(255, 255, 255, 0.05);
+  
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --shadow-neon: 0 0 15px rgba(139, 92, 246, 0.3);
+  --shadow-neon-green: 0 0 15px rgba(16, 185, 129, 0.3);
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, .logo {
+  font-family: var(--font-heading);
+}
+/* App Layout */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  transition: var(--transition);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px 32px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 1px;
+}
+.logo i {
+  color: var(--accent-green);
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+}
+.nav-links {
+  list-style: none;
+  flex: 1;
+}
+.nav-links li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  font-weight: 500;
+}
+.nav-links li:hover {
+  color: var(--text-primary);
+  background: linear-gradient(90deg, rgba(139,92,246,0.1) 0%, transparent 100%);
+}
+.nav-links li.active {
+  color: var(--text-primary);
+  background: linear-gradient(90deg, rgba(139,92,246,0.2) 0%, transparent 100%);
+  border-right: 3px solid var(--accent-purple);
+}
+.nav-links li.active i {
+  color: var(--accent-purple);
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+}
+.nav-footer {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: auto;
+}
+.nav-footer:hover {
+  color: var(--text-primary);
+}
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+}
+/* Header */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 48px;
+  position: sticky;
+  top: 0;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  border-bottom: 1px solid transparent;
+  transition: var(--transition);
+}
+.top-header.scrolled {
+  border-bottom: 1px solid var(--border-color);
+  padding: 20px 48px;
+}
+.greeting h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  background: linear-gradient(to right, #fff, var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.greeting p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+.user-block {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.notification {
+  position: relative;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.notification:hover {
+  color: var(--text-primary);
+}
+.notification .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--accent-danger);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  height: 16px;
+  width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--bg-main);
+}
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, var(--accent-purple), var(--accent-blue)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  padding: 2px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-neon);
+}
+/* Views */
+.view-container {
+  padding: 0 48px 48px;
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+.view-container.active-view {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Reusable Components for Views */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.card {
+  background-color: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  transform: translateY(-4px);
+  background-color: var(--bg-card-hover);
+  border-color: rgba(139, 92, 246, 0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+/* A soft glow on hover */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+.card:hover::before {
+  transform: scaleX(1);
+}
+.stat-title {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.stat-icon {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--accent-purple);
+  padding: 8px;
+  border-radius: 10px;
+}
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  margin-bottom: 8px;
+}
+.stat-goal {
+  font-size: 13px;
+  color: var(--accent-green);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  border-radius: 10px;
+  width: 0%;
+  transition: width 1s ease-out;
+}
+/* Sections */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-neon);
+}
+/* List Items */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  transition: var(--transition);
+}
+.list-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+.list-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.list-info {
+  flex: 1;
+}
+.list-info h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.list-info p {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.list-action {
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.list-action:hover {
+  background: rgba(16, 185, 129, 0.2);
+}
+/* Charts Placeholder Styling */
+.chart-container {
+  height: 250px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+}
+.chart-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+.chart-bar {
+  width: 100%;
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.chart-bar-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(0deg, var(--accent-purple), var(--accent-blue));
+  border-radius: 6px;
+  height: 0%;
+  transition: height 1s ease-out;
+}
+.chart-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+/* Forms */
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.form-control {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  transition: var(--transition);
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+    padding: 0;
+    z-index: 50;
+    background: rgba(15, 19, 34, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  .logo, .nav-footer {
+    display: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    flex-direction: column;
+    padding: 10px;
+    gap: 4px;
+    font-size: 11px;
+    border-right: none !important;
+    background: transparent !important;
+  }
+  
+  .nav-links li.active {
+    color: var(--accent-purple);
+  }
+  
+  .top-header {
+    padding: 24px;
+  }
+  
+  .view-container {
+    padding: 0 24px 100px;
+  }
+}
+/* Authentication Overlay Styles */
+.auth-container {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: var(--bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background-image: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+}
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), var(--shadow-neon);
+  animation: fadeIn 0.5s ease-out forwards;
+}
+.social-login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.social-login-divider::before,
+.social-login-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+.social-login-divider span {
+  padding: 0 10px;
+}
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+.auth-switch {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+}
+.auth-switch span:hover {
+  text-decoration: underline;
+}
+/* Workout Modal Styles */
+.workout-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+.workout-modal-content {
+  width: 100%;
+  max-width: 500px;
+  background: var(--bg-card);
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: rgba(255,255,255,0.05);
+  border: none;
+  color: var(--text-primary);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.modal-close-btn:hover {
+  background: rgba(255,255,255,0.1);
+  transform: scale(1.05);
+}
+/* Active Timer Styles */
+.timer-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.timer-ring {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-card) 60%, transparent 62%), conic-gradient(var(--accent-purple) 0%, var(--accent-blue) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-neon), inset 0 0 20px rgba(0,0,0,0.5);
+  animation: pulseNeon 2s infinite alternate ease-in-out;
+}
+.timer-ring.paused {
+  filter: grayscale(100%);
+  animation: none;
+  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+@keyframes pulseNeon {
+  from { box-shadow: 0 0 10px rgba(139, 92, 246, 0.4), inset 0 0 20px rgba(0,0,0,0.5); }
+  to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.7), inset 0 0 20px rgba(0,0,0,0.5); }
+}
+#timer-display {
+  font-family: var(--font-heading);
+  font-size: 64px;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.timer-controls {
+  display: flex;
+  gap: 20px;
+}
+/* Notification Dropdown */
+.notification-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 300px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+.notification-dropdown.active {
+  display: flex;
+}
+.notif-item {
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.notif-item:last-child {
+  border-bottom: none;
+}
+.notif-item:hover {
+  background: rgba(255,255,255,0.02);
+}
+.notif-item div {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+</style>
+</head>
+<body>
+  <!-- Auth Container Overlay -->
+  <div class="auth-container" id="auth-container">
+    <div class="auth-card">
+      <div class="auth-box" id="login-box">
+        <h2 style="font-family: var(--font-heading); margin-bottom: 8px;">Welcome Back!</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px;">Sign in to continue to FitBox.</p>
+        
+        <form id="login-form">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="login-email" class="form-control" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-bottom: 16px;">Sign In</button>
+        </form>
+        <div class="social-login-divider">
+          <span>OR</span>
+        </div>
+        <button class="btn-secondary" onclick="alert('Google Login Mocked!')">
+          <svg style="width:18px; margin-right:8px;" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign in with Google
+        </button>
+        <div class="auth-switch">
+          <p>Don't have an account? <span id="show-signup" style="color: var(--accent-purple); cursor: pointer;">Sign Up</span></p>
+        </div>
+      </div>
+      <div class="auth-box" id="signup-box" style="display: none;">
+        <h2 style="font-family: var(--font-heading); margin-bottom: 8px;">Create Account</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px;">Join FitBox and start crushing your goals.</p>
+        
+        <form id="signup-form">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="signup-name" class="form-control" placeholder="Jane Doe" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="signup-email" class="form-control" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signup-password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-bottom: 16px;">Sign Up</button>
+        </form>
+        <div class="auth-switch">
+          <p>Already have an account? <span id="show-login" style="color: var(--accent-purple); cursor: pointer;">Sign In</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- App Container -->
+  <div class="app-container" id="app-container" style="display: none;">
+    
+    <!-- Sidebar / Navigation -->
+    <nav class="sidebar">
+      <div class="logo">
+        <i data-lucide="activity"></i>
+        <span>FitBox</span>
+      </div>
+      <ul class="nav-links">
+        <li class="active" data-target="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </li>
+        <li data-target="exercise">
+          <i data-lucide="dumbbell"></i>
+          <span>Workouts</span>
+        </li>
+        <li data-target="diet">
+          <i data-lucide="utensils"></i>
+          <span>Diet Plan</span>
+        </li>
+        <li data-target="profile">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </li>
+      </ul>
+      <div class="nav-footer">
+        <i data-lucide="settings"></i>
+        <span>Settings</span>
+      </div>
+    </nav>
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top header for mobile and general actions -->
+      <header class="top-header">
+        <div class="greeting">
+          <h1 id="page-title">Dashboard</h1>
+          <p id="page-subtitle">Welcome back, let's crush your goals today!</p>
+        </div>
+        <div class="user-block" style="position: relative;">
+          <div class="notification" id="notification-bell" style="cursor: pointer;">
+            <i data-lucide="bell"></i>
+            <span class="badge">3</span>
+          </div>
+          <!-- Notification Dropdown -->
+          <div id="notification-dropdown" class="notification-dropdown">
+            <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-weight: bold;">Notifications</div>
+            <div class="notif-item">
+              <i data-lucide="droplet" style="color: var(--accent-blue)"></i>
+              <div>Time to drink water! Keep hydrated.</div>
+            </div>
+            <div class="notif-item">
+              <i data-lucide="target" style="color: var(--accent-purple)"></i>
+              <div>You're 200 kcal away from your daily goal.</div>
+            </div>
+          </div>
+          <img src="assets/profile_avatar.png" alt="User Profile" class="avatar" id="header-avatar" style="cursor: pointer;" onerror="this.src='https://placehold.co/100?text=USER'">
+        </div>
+      </header>
+      <!-- View Containers -->
+      <div class="view-container active-view" id="view-dashboard">
+        <!-- Rendered via JS -->
+      </div>
+      <div class="view-container" id="view-exercise">
+        <!-- Rendered via JS -->
+      </div>
+      <div class="view-container" id="view-diet">
+        <!-- Rendered via JS -->
+      </div>
+      <div class="view-container" id="view-profile">
+        <!-- Rendered via JS -->
+      </div>
+      
+      <!-- Active Workout View -->
+      <div class="view-container" id="view-active-workout" style="height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column;">
+        <div id="active-workout-main" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px;">
+          <h2 id="active-workout-title" style="font-size: 28px; margin-bottom: 8px;">Active Workout</h2>
+          <p id="active-workout-status" style="color: var(--accent-green); margin-bottom: 40px;">In Progress</p>
+          
+          <div class="timer-wrapper">
+            <div class="timer-ring">
+              <span id="timer-display">00:00</span>
+            </div>
+          </div>
+          
+          <div class="timer-controls" style="margin-bottom: 40px;">
+            <button id="timer-pause-btn" class="btn-secondary" style="width: 120px;"><i data-lucide="pause"></i> Pause</button>
+            <button id="timer-finish-btn" class="btn-primary" style="width: 160px; background: linear-gradient(135deg, var(--accent-danger), #b91c1c);"><i data-lucide="square"></i> Finish</button>
+          </div>
+          <div style="width: 100%; background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 16px; color: var(--accent-purple);"><i data-lucide="list"></i> Step-by-Step Instructions</h3>
+            <div id="active-workout-instructions" style="color: var(--text-secondary); line-height: 1.8; font-size: 15px;">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </div>
+        <!-- Workout Summary View (Hidden by default) -->
+        <div id="active-workout-summary" style="display: none; flex-direction: column; align-items: center; width: 100%; max-width: 500px; background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-neon);">
+          <i data-lucide="trophy" style="width: 64px; height: 64px; color: #fbbf24; margin-bottom: 20px;"></i>
+          <h2 style="font-size: 32px; margin-bottom: 8px;">Workout Complete!</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 32px;">Great job crushing your session.</p>
+          <div style="display: flex; gap: 20px; width: 100%; margin-bottom: 32px;">
+            <div style="flex: 1; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; text-align: center;">
+              <i data-lucide="clock" style="color: var(--accent-blue); margin-bottom: 8px;"></i>
+              <h3 id="summary-time" style="font-size: 24px;">--:--</h3>
+              <p style="font-size: 12px; color: var(--text-secondary);">Time Elapsed</p>
+            </div>
+            <div style="flex: 1; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; text-align: center;">
+              <i data-lucide="flame" style="color: var(--accent-danger); margin-bottom: 8px;"></i>
+              <h3 id="summary-cal" style="font-size: 24px;">-- kcal</h3>
+              <p id="summary-fat" style="font-size: 12px; color: var(--text-secondary);">--g Fat Burned</p>
+            </div>
+          </div>
+          <button id="summary-close-btn" class="btn-primary" style="width: 100%; justify-content: center;">Return to Dashboard</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- Workout Details Modal -->
+  <div class="workout-modal-overlay" id="workout-modal" style="display: none;">
+    <div class="workout-modal-content">
+      <button class="modal-close-btn" id="close-modal"><i data-lucide="x"></i></button>
+      <div id="modal-image-container" style="width: 100%; height: 200px; background: #1e2436; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+         <!-- Generic Image Placeholder for Workout -->
+         <i data-lucide="dumbbell" style="width: 64px; height: 64px; color: var(--accent-purple); opacity: 0.5;"></i>
+      </div>
+      <h2 id="modal-title" style="margin-bottom: 8px;">Workout Name</h2>
+      <p id="modal-tags" style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">Level • Category</p>
+      
+      <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 1; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; text-align: center;">
+          <i data-lucide="clock" style="color: var(--accent-blue); margin-bottom: 8px;"></i>
+          <h3 id="modal-time" style="font-size: 18px;">-- min</h3>
+          <p style="font-size: 12px; color: var(--text-secondary);">Duration</p>
+        </div>
+        <div style="flex: 1; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; text-align: center;">
+          <i data-lucide="flame" style="color: var(--accent-danger); margin-bottom: 8px;"></i>
+          <h3 id="modal-calories" style="font-size: 18px;">-- kcal</h3>
+          <p style="font-size: 12px; color: var(--text-secondary);">Fat Burned</p>
+        </div>
+      </div>
+      <h3 style="margin-bottom: 12px;">How to perform</h3>
+      <p id="modal-instructions" style="color: var(--text-secondary); line-height: 1.6; font-size: 14px; margin-bottom: 24px;">Instructions go here...</p>
+      <button class="btn-primary" id="btn-start-active-workout" style="width: 100%; justify-content: center;">Start This Workout</button>
+    </div>
+  </div>
+  <!-- Add Meal Modal -->
+  <div class="workout-modal-overlay" id="add-meal-modal" style="display: none;">
+    <div class="workout-modal-content">
+      <button class="modal-close-btn" id="close-meal-modal"><i data-lucide="x"></i></button>
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <i data-lucide="utensils" style="color: var(--accent-green); width: 32px; height: 32px;"></i>
+        <h2 style="margin: 0;">Add New Meal</h2>
+      </div>
+      <form id="add-meal-form">
+        <div class="form-group">
+          <label>Meal Name</label>
+          <input type="text" id="meal-name" class="form-control" placeholder="e.g. Chicken Salad" required>
+        </div>
+        <div class="form-group">
+          <label>Calories (kcal)</label>
+          <input type="number" id="meal-cal" class="form-control" placeholder="450" required>
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <div class="form-group" style="flex: 1;">
+            <label>Protein (g)</label>
+            <input type="number" id="meal-protein" class="form-control" placeholder="30" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Carbs (g)</label>
+            <input type="number" id="meal-carbs" class="form-control" placeholder="40" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Fat (g)</label>
+            <input type="number" id="meal-fat" class="form-control" placeholder="15" required>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 16px;">Log Meal</button>
+      </form>
+    </div>
+  </div>
+  <script>
+// Initialize application when DOM is ready
+let currentUser = null;
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  
+  // Auth Elements
+  const authContainer = document.getElementById('auth-container');
+  const appContainer = document.getElementById('app-container');
+  const loginBox = document.getElementById('login-box');
+  const signupBox = document.getElementById('signup-box');
+  
+  // Modal Elements
+  const workoutModal = document.getElementById('workout-modal');
+  const closeModalBtn = document.getElementById('close-modal');
+  
+  closeModalBtn.addEventListener('click', () => {
+    workoutModal.style.display = 'none';
+  });
+  // Timer & Diet Elements
+  const btnStartActiveWorkout = document.getElementById('btn-start-active-workout');
+  const viewActiveWorkout = document.getElementById('view-active-workout');
+  const activeWorkoutTitle = document.getElementById('active-workout-title');
+  const activeWorkoutStatus = document.getElementById('active-workout-status');
+  const timerDisplay = document.getElementById('timer-display');
+  const timerPauseBtn = document.getElementById('timer-pause-btn');
+  const timerFinishBtn = document.getElementById('timer-finish-btn');
+  const timerRing = document.querySelector('.timer-ring');
+  const activeWorkoutMain = document.getElementById('active-workout-main');
+  const activeWorkoutSummary = document.getElementById('active-workout-summary');
+  const activeWorkoutInstructions = document.getElementById('active-workout-instructions');
+  const summaryTime = document.getElementById('summary-time');
+  const summaryCal = document.getElementById('summary-cal');
+  const summaryFat = document.getElementById('summary-fat');
+  const summaryCloseBtn = document.getElementById('summary-close-btn');
+  
+  const addMealModal = document.getElementById('add-meal-modal');
+  const closeMealModalBtn = document.getElementById('close-meal-modal');
+  const addMealForm = document.getElementById('add-meal-form');
+  
+  closeMealModalBtn.addEventListener('click', () => {
+    addMealModal.style.display = 'none';
+  });
+  // Header Elements
+  const notificationBell = document.getElementById('notification-bell');
+  const notificationDropdown = document.getElementById('notification-dropdown');
+  const headerAvatar = document.getElementById('header-avatar');
+  if(notificationBell) {
+    notificationBell.addEventListener('click', () => {
+      notificationDropdown.classList.toggle('active');
+    });
+  }
+  if(headerAvatar) {
+    headerAvatar.addEventListener('click', () => {
+      document.querySelector('[data-target="profile"]').click();
+    });
+  }
+  let activeWorkoutId = null;
+  let timerInterval = null;
+  let timerSeconds = 0;
+  let isTimerPaused = false;
+  btnStartActiveWorkout.addEventListener('click', () => {
+    workoutModal.style.display = 'none';
+    const workout = famousWorkouts.find(w => w.id === activeWorkoutId);
+    activeWorkoutTitle.innerText = workout ? workout.title : 'Active Workout';
+    
+    if (workout) {
+      activeWorkoutInstructions.innerHTML = workout.instructions;
+    }
+    activeWorkoutMain.style.display = 'flex';
+    activeWorkoutSummary.style.display = 'none';
+    // Hide all views, show active workout
+    document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active-view'));
+    viewActiveWorkout.classList.add('active-view');
+    viewActiveWorkout.style.display = 'flex';
+    
+    // Reset and start timer
+    clearInterval(timerInterval);
+    timerSeconds = 0;
+    isTimerPaused = false;
+    timerRing.classList.remove('paused');
+    timerPauseBtn.innerHTML = '<i data-lucide="pause"></i> Pause';
+    activeWorkoutStatus.innerText = 'In Progress';
+    activeWorkoutStatus.style.color = 'var(--accent-green)';
+    updateTimerDisplay();
+    lucide.createIcons();
+    
+    timerInterval = setInterval(() => {
+      if (!isTimerPaused) {
+        timerSeconds++;
+        updateTimerDisplay();
+      }
+    }, 1000);
+  });
+  timerPauseBtn.addEventListener('click', () => {
+    isTimerPaused = !isTimerPaused;
+    if (isTimerPaused) {
+      timerRing.classList.add('paused');
+      timerPauseBtn.innerHTML = '<i data-lucide="play"></i> Resume';
+      activeWorkoutStatus.innerText = 'Paused';
+      activeWorkoutStatus.style.color = 'var(--text-secondary)';
+    } else {
+      timerRing.classList.remove('paused');
+      timerPauseBtn.innerHTML = '<i data-lucide="pause"></i> Pause';
+      activeWorkoutStatus.innerText = 'In Progress';
+      activeWorkoutStatus.style.color = 'var(--accent-green)';
+    }
+    lucide.createIcons();
+  });
+  timerFinishBtn.addEventListener('click', () => {
+    clearInterval(timerInterval);
+    const workout = famousWorkouts.find(w => w.id === activeWorkoutId);
+    
+    let calBurned = 0;
+    if (workout) {
+      const expectedSeconds = parseInt(workout.duration) * 60;
+      const ratio = timerSeconds / expectedSeconds;
+      calBurned = Math.round(parseInt(workout.calories) * ratio);
+    }
+    const fatBurned = Math.round(calBurned / 9);
+    
+    summaryTime.innerText = formatTime(timerSeconds);
+    summaryCal.innerText = `${calBurned} kcal`;
+    summaryFat.innerText = `${fatBurned}g Fat Burned`;
+    activeWorkoutMain.style.display = 'none';
+    activeWorkoutSummary.style.display = 'flex';
+  });
+  summaryCloseBtn.addEventListener('click', () => {
+    viewActiveWorkout.style.display = 'none';
+    document.getElementById('view-exercise').classList.add('active-view');
+  });
+  function updateTimerDisplay() {
+    timerDisplay.innerText = formatTime(timerSeconds);
+  }
+  function formatTime(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const s = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+  // Handle Meal Submission
+  addMealForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('meal-name').value;
+    const cal = parseInt(document.getElementById('meal-cal').value);
+    const p = parseInt(document.getElementById('meal-protein').value);
+    const c = parseInt(document.getElementById('meal-carbs').value);
+    const f = parseInt(document.getElementById('meal-fat').value);
+    
+    dietData.meals.unshift({ name, calories: cal, type: 'Snack/Other' });
+    dietData.eaten += cal;
+    dietData.protein += p;
+    dietData.carbs += c;
+    dietData.fat += f;
+    
+    addMealModal.style.display = 'none';
+    addMealForm.reset();
+    renderDiet();
+    triggerAnimations('diet');
+  });
+  // Switch auth forms
+  document.getElementById('show-signup').addEventListener('click', () => {
+    loginBox.style.display = 'none';
+    signupBox.style.display = 'block';
+  });
+  
+  document.getElementById('show-login').addEventListener('click', () => {
+    signupBox.style.display = 'none';
+    loginBox.style.display = 'block';
+  });
+  // Login Form Submission
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.innerText = 'Signing In...';
+    
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    setTimeout(() => {
+      const users = JSON.parse(localStorage.getItem('fitbox_users') || '{}');
+      if (users[email] && users[email].password === password) {
+        currentUser = users[email];
+        startApp();
+      } else if (email === 'test@fitbox.com' || password === 'password123') { // Fallback for ease of testing
+        currentUser = { name: 'Test User', email: 'test@fitbox.com', avatar: null };
+        startApp();
+      } else {
+        alert('Invalid credentials or user not found. Please sign up!');
+      }
+      btn.innerText = 'Sign In';
+    }, 500);
+  });
+  // Signup Form Submission
+  document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.innerText = 'Creating Account...';
+    
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    
+    setTimeout(() => {
+      const users = JSON.parse(localStorage.getItem('fitbox_users') || '{}');
+      if (users[email]) {
+        alert('Email already exists. Please log in.');
+      } else {
+        users[email] = { name, email, password, avatar: null };
+        localStorage.setItem('fitbox_users', JSON.stringify(users));
+        alert('Account created! Please log in.');
+        document.getElementById('show-login').click();
+      }
+      btn.innerText = 'Sign Up';
+    }, 500);
+  });
+  function startApp() {
+    authContainer.style.display = 'none';
+    appContainer.style.display = 'flex';
+    document.getElementById('page-subtitle').innerText = `Welcome back ${currentUser.name}, let's crush your goals today!`;
+    triggerAnimations('dashboard');
+  }
+  // Navigation State
+  const navItems = document.querySelectorAll('.nav-links li');
+  const views = document.querySelectorAll('.view-container');
+  const pageTitle = document.getElementById('page-title');
+  const pageSubtitle = document.getElementById('page-subtitle');
+  
+  const titles = {
+    dashboard: { title: 'Dashboard', sub: "Welcome back, let's crush your goals today!" },
+    exercise: { title: 'Workouts', sub: "Track your progress and stay consistent." },
+    diet: { title: 'Diet Plan', sub: "Fuel your body with the right macros." },
+    profile: { title: 'Profile', sub: "Manage your personal goals and settings." }
+  };
+  // Header Scroll Effect
+  const mainContent = document.querySelector('.main-content');
+  const header = document.querySelector('.top-header');
+  mainContent.addEventListener('scroll', () => {
+    if (mainContent.scrollTop > 10) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+  // Handle Navigation
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // Remove active class
+      navItems.forEach(nav => nav.classList.remove('active'));
+      views.forEach(view => view.classList.remove('active-view'));
+      
+      // Set active
+      item.classList.add('active');
+      const target = item.getAttribute('data-target');
+      document.getElementById(`view-${target}`).classList.add('active-view');
+      
+      // Update Header
+      pageTitle.innerText = titles[target].title;
+      pageSubtitle.innerText = currentUser ? `Hey ${currentUser.name}, ${titles[target].sub.toLowerCase()}` : titles[target].sub;
+      
+      // Re-trigger layout animations
+      triggerAnimations(target);
+    });
+  });
+  // Render Views
+  renderDashboard();
+  renderExercise();
+  renderDiet();
+  renderProfile();
+});
+// Mock Data
+const data = {
+  caloriesBurned: 840,
+  caloriesGoal: 1000,
+  workoutTime: 45, // mins
+  workoutGoal: 60,
+  waterIntake: 1.5, // L
+  waterGoal: 2.5,
+  dailyChart: [
+    { day: 'Mon', val: 40 },
+    { day: 'Tue', val: 65 },
+    { day: 'Wed', val: 80 },
+    { day: 'Thu', val: 45 },
+    { day: 'Fri', val: 90 },
+    { day: 'Sat', val: 30 },
+    { day: 'Sun', val: 75 }
+  ]
+};
+const famousWorkouts = [
+  {
+    id: 1,
+    title: "Full Body Hypertrophy",
+    tags: "Intermediate • Strength",
+    duration: "45",
+    calories: "350",
+    instructions: "1. Barbell Squats (4 sets x 8 reps)<br>2. Bench Press (4 sets x 8 reps)<br>3. Bent-Over Rows (3 sets x 10 reps)<br>4. Overhead Press (3 sets x 10 reps)<br><br>Keep resting times to 90 seconds. Focus on heavy compound movements.",
+    image: "assets/workout_thumb.png",
+    color: "var(--accent-purple)",
+    icon: "dumbbell"
+  },
+  {
+    id: 2,
+    title: "HIIT Cardio Burn",
+    tags: "Intense • No Equipment",
+    duration: "20",
+    calories: "400",
+    instructions: "Perform each exercise for 45 seconds, followed by 15 seconds of rest.<br><br>1. Jumping Jacks<br>2. Burpees<br>3. High Knees<br>4. Mountain Climbers<br>5. Jump Squats<br><br>Repeat for 4 rounds.",
+    image: null,
+    color: "var(--accent-green)",
+    icon: "zap"
+  },
+  {
+    id: 3,
+    title: "Classic Deadlift Session",
+    tags: "Advanced • Powerlifting",
+    duration: "60",
+    calories: "450",
+    instructions: "1. Warm up with light weight.<br>2. Work up to a heavy set of 5 reps.<br>3. Perform 5 sets of 5 reps.<br>4. Accessory work: Romanian Deadlifts and Pull-ups.<br><br>Ensure a straight back and brace your core.",
+    image: null,
+    color: "var(--accent-blue)",
+    icon: "activity"
+  },
+  {
+    id: 4,
+    title: "Push-up Mastery",
+    tags: "Beginner • Bodyweight",
+    duration: "15",
+    calories: "120",
+    instructions: "1. Standard Push-ups (3 sets to failure)<br>2. Wide Push-ups (3 sets to failure)<br>3. Diamond Push-ups (3 sets of 10)<br><br>Keep your core tight and elbows tucked in slightly.",
+    image: null,
+    color: "var(--accent-green)",
+    icon: "chevrons-up"
+  }
+];
+function showWorkoutDetails(workoutId) {
+  const workout = famousWorkouts.find(w => w.id === workoutId);
+  if (!workout) return;
+  
+  activeWorkoutId = workoutId;
+  
+  document.getElementById('modal-title').innerText = workout.title;
+  document.getElementById('modal-tags').innerText = workout.tags;
+  document.getElementById('modal-time').innerText = workout.duration + ' min';
+  document.getElementById('modal-calories').innerText = workout.calories + ' kcal';
+  document.getElementById('modal-instructions').innerHTML = workout.instructions;
+  
+  const imgContainer = document.getElementById('modal-image-container');
+  if (workout.image) {
+    imgContainer.innerHTML = `<img src="${workout.image}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+  } else {
+    imgContainer.innerHTML = `<i data-lucide="${workout.icon}" style="width: 64px; height: 64px; color: ${workout.color}; filter: drop-shadow(0 0 10px ${workout.color}); opacity: 0.8;"></i>`;
+    lucide.createIcons();
+  }
+  
+  document.getElementById('workout-modal').style.display = 'flex';
+}
+function triggerAnimations(view) {
+  // Animate progress bars
+  const viewEl = document.getElementById(`view-${view}`);
+  if(!viewEl) return;
+  const bars = viewEl.querySelectorAll('.progress-fill');
+  bars.forEach(bar => {
+    const width = bar.getAttribute('data-width');
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = width; }, 50);
+  });
+  const chartFills = viewEl.querySelectorAll('.chart-bar-fill');
+  chartFills.forEach(fill => {
+    const height = fill.getAttribute('data-height');
+    fill.style.height = '0%';
+    setTimeout(() => { fill.style.height = height; }, 50);
+  });
+}
+function renderDashboard() {
+  const container = document.getElementById('view-dashboard');
+  
+  const calcPerc = (val, max) => Math.min(Math.round((val / max) * 100), 100) + '%';
+  const calPerc = calcPerc(data.caloriesBurned, data.caloriesGoal);
+  const timePerc = calcPerc(data.workoutTime, data.workoutGoal);
+  const waterPerc = calcPerc(data.waterIntake, data.waterGoal);
+  let chartHtml = data.dailyChart.map(item => `
+    <div class="chart-bar-wrapper">
+      <div class="chart-bar" style="height: 150px">
+        <div class="chart-bar-fill" data-height="${item.val}%"></div>
+      </div>
+      <span class="chart-label">${item.day}</span>
+    </div>
+  `).join('');
+  container.innerHTML = `
+    <div class="grid-cards">
+      <div class="card">
+        <div class="stat-title">
+          <span>Active Calories</span>
+          <i data-lucide="flame" class="stat-icon" style="color:var(--accent-danger); background:rgba(239, 68, 68, 0.1)"></i>
+        </div>
+        <div class="stat-value">${data.caloriesBurned} <span style="font-size:16px; color:var(--text-secondary)">kcal</span></div>
+        <div class="stat-goal"><i data-lucide="trending-up" style="width:14px; height:14px"></i> Goal: ${data.caloriesGoal} kcal</div>
+        <div class="progress-bar">
+          <div class="progress-fill" data-width="${calPerc}" style="background: linear-gradient(90deg, #f43f5e, #ef4444)"></div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="stat-title">
+          <span>Workout Time</span>
+          <i data-lucide="clock" class="stat-icon"></i>
+        </div>
+        <div class="stat-value">${data.workoutTime} <span style="font-size:16px; color:var(--text-secondary)">min</span></div>
+        <div class="stat-goal"><i data-lucide="activity" style="width:14px; height:14px"></i> Goal: ${data.workoutGoal} min</div>
+        <div class="progress-bar">
+          <div class="progress-fill" data-width="${timePerc}"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stat-title">
+          <span>Water Intake</span>
+          <i data-lucide="droplet" class="stat-icon" style="color:var(--accent-blue); background:rgba(59, 130, 246, 0.1)"></i>
+        </div>
+        <div class="stat-value">${data.waterIntake} <span style="font-size:16px; color:var(--text-secondary)">L</span></div>
+        <div class="stat-goal"><i data-lucide="target" style="width:14px; height:14px"></i> Goal: ${data.waterGoal} L</div>
+        <div class="progress-bar">
+          <div class="progress-fill" data-width="${waterPerc}" style="background: linear-gradient(90deg, #0ea5e9, #3b82f6)"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Chart Section -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="section-header">
+        <h2>Activity Overview</h2>
+        <select class="form-control" style="width:120px; padding: 6px 12px; font-size:13px; margin:0">
+          <option>This Week</option>
+          <option>Last Week</option>
+        </select>
+      </div>
+      <div class="chart-container">
+        ${chartHtml}
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+}
+function renderExercise() {
+  const container = document.getElementById('view-exercise');
+  
+  let routinesHtml = famousWorkouts.map(w => {
+    let visualHtml = w.image 
+      ? `<img src="${w.image}" alt="${w.title}" style="width:100%; height:160px; object-fit:cover;">`
+      : `<div style="width:100%; height:160px; background:linear-gradient(45deg, #1e2436, #0f1322); display:flex; align-items:center; justify-content:center;">
+            <i data-lucide="${w.icon}" style="color:${w.color}; width:48px; height:48px; filter: drop-shadow(0 0 10px ${w.color})"></i>
+         </div>`;
+         
+    return `
+      <div class="card workout-card" data-id="${w.id}" style="padding: 0; cursor: pointer;">
+        ${visualHtml}
+        <div style="padding: 20px;">
+          <h3 style="margin-bottom: 8px">${w.title}</h3>
+          <p style="color:var(--text-secondary); font-size:14px; margin-bottom: 16px">${w.duration} min • ${w.tags.split('•')[0]}</p>
+          <button class="btn-primary" style="width:100%; justify-content:center; ${w.color !== 'var(--accent-purple)' ? `background:linear-gradient(135deg, ${w.color}, #0f1322)` : ''}">Start Workout</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  container.innerHTML = `
+    <div class="section-header">
+      <h2>Recommended Routines</h2>
+      <button class="btn-primary"><i data-lucide="plus"></i> Custom Routine</button>
+    </div>
+    
+    <div class="grid-cards">
+      ${routinesHtml}
+    </div>
+    
+    <div class="card">
+      <h2 style="margin-bottom: 20px;">Recent Activity</h2>
+      <div class="list-item">
+        <div style="background:rgba(139,92,246,0.1); padding:12px; border-radius:12px; color:var(--accent-purple)"><i data-lucide="dumbbell"></i></div>
+        <div class="list-info">
+          <h4>Upper Body Strength</h4>
+          <p>Yesterday, 5:30 PM • 6400 lbs volume</p>
+        </div>
+        <div style="color:var(--text-secondary)">60 min</div>
+      </div>
+      <div class="list-item">
+        <div style="background:rgba(59,130,246,0.1); padding:12px; border-radius:12px; color:var(--accent-blue)"><i data-lucide="footprints"></i></div>
+        <div class="list-info">
+          <h4>Morning Jog</h4>
+          <p>Oct 12, 7:00 AM • 3.2 mi</p>
+        </div>
+        <div style="color:var(--text-secondary)">30 min</div>
+      </div>
+    </div>
+  `;
+  
+  lucide.createIcons();
+  
+  // Attach event listeners after rendering
+  document.querySelectorAll('.workout-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      const id = parseInt(card.getAttribute('data-id'));
+      showWorkoutDetails(id);
+    });
+  });
+}
+let dietData = {
+  eaten: 1850,
+  target: 2500,
+  protein: 120,
+  proteinTarget: 150,
+  carbs: 180,
+  carbsTarget: 220,
+  fat: 45,
+  fatTarget: 65,
+  meals: [
+    { name: 'Protein Power Bowl', calories: 450, type: 'Breakfast', icon: 'image' },
+    { name: 'Mid-Morning Snack', calories: 150, type: 'Snack', icon: 'coffee' }
+  ]
+};
+function renderDiet() {
+  const container = document.getElementById('view-diet');
+  
+  const pPerc = Math.min(Math.round((dietData.protein / dietData.proteinTarget) * 100), 100) + '%';
+  const cPerc = Math.min(Math.round((dietData.carbs / dietData.carbsTarget) * 100), 100) + '%';
+  const fPerc = Math.min(Math.round((dietData.fat / dietData.fatTarget) * 100), 100) + '%';
+  const totalPerc = Math.min(Math.round((dietData.eaten / dietData.target) * 100), 100);
+  // Dynamic Suggestion Logic
+  let suggestionText = "You're on track! Keep it up.";
+  const pDiff = dietData.proteinTarget - dietData.protein;
+  const cDiff = dietData.carbsTarget - dietData.carbs;
+  const fDiff = dietData.fatTarget - dietData.fat;
+  
+  if (pDiff > 20) {
+    suggestionText = `You need ${pDiff}g more protein. Try a Tuna Salad or Grilled Chicken!`;
+  } else if (cDiff > 40) {
+    suggestionText = `You need ${cDiff}g more carbs. How about some Sweet Potatoes?`;
+  } else if (fDiff > 15) {
+    suggestionText = `You need ${fDiff}g more fats. Consider a handful of almonds or avocado!`;
+  }
+  let mealsHtml = dietData.meals.map(m => `
+    <div class="list-item">
+      ${m.icon === 'image' 
+        ? `<img src="assets/diet_meal_thumb.png" alt="${m.name}" class="list-img" onerror="this.style.display='none'">` 
+        : `<div style="width:60px; height:60px; border-radius:12px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center;"><i data-lucide="${m.icon || 'utensils'}"></i></div>`
+      }
+      <div class="list-info">
+        <h4>${m.name}</h4>
+        <p>${m.type} • ${m.calories} kcal</p>
+      </div>
+      <div class="list-action"><i data-lucide="check" style="width:16px;"></i> Logged</div>
+    </div>
+  `).join('');
+  container.innerHTML = `
+    <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid var(--accent-purple); padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; gap: 12px; align-items: center;">
+      <i data-lucide="sparkles" style="color: var(--accent-purple);"></i>
+      <div>
+        <h4 style="margin-bottom: 4px;">Smart Insight</h4>
+        <p style="color: var(--text-secondary); font-size: 14px;">${suggestionText}</p>
+      </div>
+    </div>
+    <div class="grid-cards">
+      <!-- Macro Breakdown -->
+      <div class="card" style="grid-column: span 2">
+        <div class="section-header">
+          <h2>Daily Nutrition</h2>
+          <button class="btn-primary btn-add-meal" style="padding: 6px 12px; font-size: 13px"><i data-lucide="plus"></i> Add Meal</button>
+        </div>
+        
+        <div style="display:flex; gap: 32px; align-items:center; flex-wrap:wrap">
+          <!-- Circular Progress -->
+          <div style="position:relative; width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(var(--accent-purple) ${totalPerc}%, var(--border-color) 0); display:flex; align-items:center; justify-content:center; transition: all 1s ease-out;">
+             <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--bg-card); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+               <span style="font-size:24px; font-weight:800; font-family:var(--font-heading)">${dietData.eaten}</span>
+               <span style="font-size:12px; color:var(--text-secondary)">kcal / ${dietData.target}</span>
+             </div>
+          </div>
+          
+          <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+             <div>
+               <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px;"><span>Protein</span> <span style="color:var(--accent-purple)">${dietData.protein}g / ${dietData.proteinTarget}g</span></div>
+               <div class="progress-bar" style="margin:0"><div class="progress-fill" data-width="${pPerc}"></div></div>
+             </div>
+             <div>
+               <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px;"><span>Carbs</span> <span style="color:var(--accent-blue)">${dietData.carbs}g / ${dietData.carbsTarget}g</span></div>
+               <div class="progress-bar" style="margin:0"><div class="progress-fill" data-width="${cPerc}" style="background:var(--accent-blue)"></div></div>
+             </div>
+             <div>
+               <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px;"><span>Fats</span> <span style="color:var(--accent-green)">${dietData.fat}g / ${dietData.fatTarget}g</span></div>
+               <div class="progress-bar" style="margin:0"><div class="progress-fill" data-width="${fPerc}" style="background:var(--accent-green)"></div></div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; margin-top:10px">
+      <h2 style="margin: 0;">Meals Today</h2>
+      <button class="list-action btn-add-meal" style="border:none;"><i data-lucide="plus"></i> Add Snack</button>
+    </div>
+    
+    ${mealsHtml}
+  `;
+  
+  lucide.createIcons();
+  
+  // Attach Event Listeners
+  document.querySelectorAll('.btn-add-meal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('add-meal-modal').style.display = 'flex';
+    });
+  });
+}
+function renderProfile() {
+  const container = document.getElementById('view-profile');
+  container.innerHTML = `
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+      <div style="display:flex; flex-direction:column; align-items:center; margin-bottom: 32px; position:relative;">
+        <input type="file" id="avatar-upload" accept="image/*" style="display:none;">
+        <div style="position:relative; display:inline-block; cursor:pointer;" id="avatar-container">
+          <img id="profile-main-avatar" src="${currentUser?.avatar || 'assets/profile_avatar.png'}" class="avatar" style="width:100px; height:100px; margin-bottom: 16px; object-fit:cover; border-radius: 50%;" onerror="this.src='https://placehold.co/100?text=U'">
+          <div style="position:absolute; bottom:16px; right:0; background:var(--accent-purple); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(0,0,0,0.5);"><i data-lucide="camera" style="width:14px; height:14px;"></i></div>
+        </div>
+        <h2 id="profile-name-display">${currentUser?.name || 'Alex Johnson'}</h2>
+        <p style="color:var(--text-secondary)">Premium Member</p>
+      </div>
+      
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="profile-input-name" class="form-control" value="${currentUser?.name || 'Alex Johnson'}">
+      </div>
+      <div style="display:flex; gap:20px;">
+        <div class="form-group" style="flex:1">
+          <label>Daily Calorie Burn Goal (kcal)</label>
+          <input type="number" id="profile-cal-goal" class="form-control" value="${data.caloriesGoal}">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>Daily Workout Time Goal (min)</label>
+          <input type="number" id="profile-time-goal" class="form-control" value="${data.workoutGoal}">
+        </div>
+      </div>
+      <div style="display:flex; gap:20px;">
+        <div class="form-group" style="flex:1">
+          <label>Weight (kg)</label>
+          <input type="number" class="form-control" value="75">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>Height (cm)</label>
+          <input type="number" class="form-control" value="180">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Primary Goal</label>
+        <select class="form-control">
+          <option>Build Muscle</option>
+          <option>Lose Weight</option>
+          <option>Maintain Fitness</option>
+          <option>Improve Endurance</option>
+        </select>
+      </div>
+      
+      <button id="save-profile-btn" class="btn-primary" style="width:100%; justify-content:center; margin-top:20px">Save Changes</button>
+    </div>
+  `;
+  lucide.createIcons();
+  const avatarContainer = document.getElementById('avatar-container');
+  const avatarUpload = document.getElementById('avatar-upload');
+  
+  if (avatarContainer) {
+    avatarContainer.addEventListener('click', () => {
+      avatarUpload.click();
+    });
+  }
+  if (avatarUpload) {
+    avatarUpload.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const b64 = e.target.result;
+          document.getElementById('profile-main-avatar').src = b64;
+          document.getElementById('header-avatar').src = b64;
+          if (currentUser) currentUser.avatar = b64;
+          
+          const users = JSON.parse(localStorage.getItem('fitbox_users') || '{}');
+          if (currentUser && users[currentUser.email]) {
+            users[currentUser.email].avatar = b64;
+            localStorage.setItem('fitbox_users', JSON.stringify(users));
+          }
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+  document.getElementById('save-profile-btn').addEventListener('click', () => {
+    const newName = document.getElementById('profile-input-name').value;
+    const newCal = parseInt(document.getElementById('profile-cal-goal').value);
+    const newTime = parseInt(document.getElementById('profile-time-goal').value);
+    // Update global data
+    data.caloriesGoal = newCal;
+    data.workoutGoal = newTime;
+    
+    if (currentUser) {
+      currentUser.name = newName;
+      document.getElementById('profile-name-display').innerText = newName;
+      document.getElementById('page-subtitle').innerText = `Welcome back ${newName}, let's crush your goals today!`;
+      
+      const users = JSON.parse(localStorage.getItem('fitbox_users') || '{}');
+      if (users[currentUser.email]) {
+        users[currentUser.email].name = newName;
+        localStorage.setItem('fitbox_users', JSON.stringify(users));
+      }
+    }
+    
+    // Re-render dashboard
+    renderDashboard();
+    
+    // Switch to dashboard view temporarily to show success
+    document.querySelector('[data-target="dashboard"]').click();
+  });
+}
+</script>
+</body>
+</html>
